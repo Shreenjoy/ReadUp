@@ -1,6 +1,6 @@
 # P2-A3 — ReadUp first draft
 
-**Team 5** · Keshav Arya, Revaant Daga, Shreenjoy Sengupta, Pranay Varanasi
+**Team 5** · Shreenjoy Sengupta, Pranay Varanasi, Anishka Kharana
 INFO 490 · University of Illinois Urbana-Champaign
 
 Repository: this repo. Run instructions in [README.md](../README.md), AI details in
@@ -40,8 +40,15 @@ and a progress record that survives a change of tutor.
    or parent.
 
 **Changes from P2-A2.** The concept, the screens and the flow are unchanged — the wireframes
-submitted in P2-A2 still describe the product. Three refinements, all made for technical
-reasons during the build:
+submitted in P2-A2 still describe the product.
+
+**The team has changed.** P2-A2 was submitted by four members: Keshav Arya, Revaant Daga,
+Shreenjoy Sengupta and Pranay Varanasi. The team is now three: Shreenjoy Sengupta, Pranay
+Varanasi and Anishka Kharana. The four Django apps were originally scoped one per member; with
+three members they are split by feature area instead, and the roadmap below reflects the
+current allocation.
+
+Three further refinements, all made for technical reasons during the build:
 
 - **A child's level is derived, not stored.** The proposal implied a level on the student
   record. We compute it from the most recent attempt instead, so the attempt history is the
@@ -111,13 +118,13 @@ Status as of 16 November 2026. Final push due 8 December 2026.
 
 | Task | Current status | Responsible member | Expected completion |
 |---|---|---|---|
-| **Django core features** | **Done.** Four apps, seven models, 15 views, 13 templates, auth with tutor/lead roles, forms with validation. | Keshav Arya (accounts), all | Complete |
+| **Django core features** | **Done.** Four apps, seven models, 15 views, 13 templates, auth with tutor/lead roles, forms with validation. | All three | Complete |
 | **Database and APIs** | **Done.** Migrations committed; JSON API at `/progress/api/`; CSV export; search and filtering. Remaining: per-lesson JSON endpoint. | Pranay Varanasi | 24 Nov |
-| **AI integration** | **Working.** Drafting, validation, review-before-save and the full fallback chain are implemented and tested. Remaining: translation-quality flagging, caching repeat drafts, better math prompts. | Revaant Daga, Shreenjoy Sengupta | 30 Nov |
+| **AI integration** | **Working.** Drafting, validation, review-before-save and the full fallback chain are implemented and tested. Remaining: translation-quality flagging, caching repeat drafts, better math prompts. | Shreenjoy Sengupta | 30 Nov |
 | **Evaluation and testing** | **Partly done.** 58 automated tests pass. Remaining: the five-test evaluation table with latency and quality scores, two documented failure cases, and one before/after improvement. | Shreenjoy Sengupta | 1 Dec |
-| **Deployment** | **Not started.** Target PythonAnywhere at `readup.pythonanywhere.com`. Remaining: deploy, `collectstatic`, `.env` on the server, seed the demo program, cost and scalability write-up. | Keshav Arya | 3 Dec |
+| **Deployment** | **Not started.** Target PythonAnywhere at `readup.pythonanywhere.com`. Remaining: deploy, `collectstatic`, `.env` on the server, seed the demo program, cost and scalability write-up. | Anishka Kharana | 3 Dec |
 | **Documentation** | **Mostly done.** README, README_AI and this document are written. Remaining: deployment notes, the cost comparison table, and the 3-minute demo video. | Pranay Varanasi, all | 7 Dec |
-| **Audio for instruction lines** | **Deferred from P2-A2.** In the wireframes, not built. | Revaant Daga | 5 Dec, if time |
+| **Audio for instruction lines** | **Deferred from P2-A2.** In the wireframes, not built. | Anishka Kharana | 5 Dec, if time |
 
 **Known gaps we are not hiding.** There is no deployment yet, so Part 5 is unaddressed. The
 evaluation table required by Part 4 is not written — the automated tests are not a substitute

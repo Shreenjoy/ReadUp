@@ -7,8 +7,8 @@ see how each child is improving. Questions adjust their difficulty as a session 
 instructions can appear in Bengali, Hindi, Urdu or Gujarati so a child who is still learning
 English is not stuck on the directions.
 
-Built for INFO 490 (Project 2) by Team 5 — Keshav Arya, Revaant Daga, Shreenjoy Sengupta and
-Pranay Varanasi — with [Informed Empowerment](https://informedempowerment.org) as the pilot
+Built for INFO 490 (Project 2) by Team 5 — Shreenjoy Sengupta, Pranay Varanasi and
+Anishka Kharana — with [Informed Empowerment](https://informedempowerment.org) as the pilot
 partner.
 
 **Tutors hold the accounts. Children never sign up, never type personal information, and only
@@ -106,14 +106,14 @@ paths, and the dashboard/API/CSV output.
 ## Project layout
 
 ```
-accounts/   tutor accounts, roles, student profiles      (Keshav)
-lessons/    the lesson bank and the AI assistant          (Revaant)
-practice/   the adaptive quiz engine and sessions         (Shreenjoy)
-progress/   dashboard, JSON API, CSV export               (Pranay)
+accounts/   tutor accounts, roles, student profiles
+lessons/    the lesson bank and the AI authoring assistant
+practice/   the adaptive quiz engine and practice sessions
+progress/   dashboard, JSON API, CSV export
 templates/  all HTML, with base.html for the tutor shell
 static/css/ one stylesheet; the child session has its own visual mode
 docs/       screenshots and the first-draft write-up
 ```
 
-Each app matches one team member's area from the project proposal, and all four share the
-`Student` and `Attempt` models.
+The four apps split the product by feature area, and all four share the `Student` and
+`Attempt` models.

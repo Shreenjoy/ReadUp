@@ -1,6 +1,6 @@
 # Part 5 — Deployment, cost and production readiness
 
-ReadUp · Team 5 · INFO 490
+ReadUp · Team 5 (Shreenjoy Sengupta, Pranay Varanasi, Anishka Kharana) · INFO 490
 
 ---
 

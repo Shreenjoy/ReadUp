@@ -1,6 +1,7 @@
 # ReadUp — 4-minute presentation script (240s)
 
-Team 5 · INFO 490. Spoken words in quotes. `[ ]` lines are what you do on screen.
+Team 5 — Shreenjoy Sengupta, Pranay Varanasi, Anishka Kharana · INFO 490.
+Spoken words in quotes. `[ ]` lines are what you do on screen.
 Pace ≈ 145 wpm. Total ≈ 545 spoken words, which leaves room to breathe.
 
 ---
@@ -106,7 +107,7 @@ Pace ≈ 145 wpm. Total ≈ 545 spoken words, which leaves room to breathe.
 
 ## 4. Technical implementation — 2:50–3:30 (20 pts)
 
-> "Django, four apps — one per team member — over SQLite, with seven models.
+> "Django, four apps — one per feature area — over SQLite, with seven models.
 >
 > The design decision I'd point at: **a child's level isn't stored anywhere.** It's derived
 > from their attempt history. Every attempt records the level it was asked at and the level the

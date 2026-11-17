@@ -1,6 +1,6 @@
 # Part 4 — Evaluation, testing and improvement
 
-ReadUp · Team 5 · INFO 490
+ReadUp · Team 5 (Shreenjoy Sengupta, Pranay Varanasi, Anishka Kharana) · INFO 490
 
 Every number here was measured on the real application through the real Django request path
 by `python manage.py evaluate`, which writes `docs/evaluation-results.json`. Nothing is

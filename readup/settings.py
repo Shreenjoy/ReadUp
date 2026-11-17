@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # One app per team member, matching the split in the project proposal:
+    # The product split into four feature areas, one Django app each:
     "accounts",   # tutor accounts, roles, student profiles
     "lessons",    # the lesson bank and the AI authoring assistant
     "practice",   # the adaptive quiz engine and practice sessions
