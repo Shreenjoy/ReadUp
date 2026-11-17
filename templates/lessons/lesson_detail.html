@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }}{% endblock %}
+{% block content %}
+  <p><a class="back" href="{% url 'lessons:list' %}">&lsaquo; Lesson bank</a></p>
+  <h1>{{ lesson.title }}</h1>
+  <p class="muted">{{ lesson.get_skill_display }} · Level {{ lesson.level }} ·
+     added by {{ lesson.created_by.first_name|default:lesson.created_by.username }}
+     {% if lesson.ai_generated %}· <span class="pill">drafted by the assistant, reviewed by a tutor</span>{% endif %}</p>
+  {% if lesson.passage %}<div class="panel"><h3>Passage</h3><p>{{ lesson.passage }}</p></div>{% endif %}
+
+  {% for question in lesson.questions.all %}
+    <div class="panel">
+      <h3>{{ forloop.counter }}. {{ question.prompt }}</h3>
+      <ul class="choices">
+        {% for choice in question.choices.all %}
+          <li>{% if choice.is_correct %}<strong>{{ choice.text }} ✓</strong>{% else %}{{ choice.text }}{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% if question.instruction_translations %}
+        <p class="muted small">Instruction lines:
+          {% for code, text in question.instruction_translations.items %}
+            {% if text %}<span class="pill">{{ code }}</span> {{ text }}{% endif %}
+          {% endfor %}
+        </p>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p class="muted">This lesson has no questions yet.</p>
+  {% endfor %}
+{% endblock %}

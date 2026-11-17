@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}My students{% endblock %}
+{% block content %}
+  {% with nav="students" %}{% endwith %}
+  <div class="rowhead">
+    <div><h1>My students</h1><p class="muted">Pick a student to start a session.</p></div>
+    <form method="get" class="inline">
+      <input name="q" value="{{ query }}" placeholder="Search students" aria-label="Search students">
+      <button class="btn small ghost">Search</button>
+      <a class="btn small" href="{% url 'students:add' %}">+ Add student</a>
+    </form>
+  </div>
+
+  {% if cards %}
+    <div class="cards">
+      {% for c in cards %}
+        <article class="card student">
+          <div class="avatar">{{ c.student.first_name|first|upper }}</div>
+          <h3><a href="{{ c.student.get_absolute_url }}">{{ c.student.first_name }}</a></h3>
+          <p class="muted">Grade {{ c.student.grade }} · {{ c.student.get_home_language_display }}</p>
+          <p>
+            <span class="pill">Reading L{{ c.reading_level }}</span>
+            <span class="pill">Math L{{ c.math_level }}</span>
+          </p>
+          <p class="muted small">
+            {% if c.last_seen %}Last session {{ c.last_seen|timesince }} ago{% else %}No sessions yet{% endif %}
+          </p>
+          <a class="btn wide" href="{% url 'practice:start' c.student.pk %}">Start reading session</a>
+          <a class="btn wide ghost" href="{% url 'practice:start' c.student.pk %}?skill=math">Start math session</a>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card empty">
+      <h3>No students yet</h3>
+      <p>Add your first student to start a practice session.</p>
+      <a class="btn" href="{% url 'students:add' %}">+ Add student</a>
+    </div>
+  {% endif %}
+{% endblock %}

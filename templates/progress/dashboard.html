@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Progress{% endblock %}
+{% block content %}
+  <div class="rowhead">
+    <div><h1>Progress</h1><p class="muted">Every chart is computed from saved attempts.</p></div>
+    <a class="btn small" href="{% url 'progress:export' %}?student={{ selected }}&days={{ days }}">Download report (CSV)</a>
+  </div>
+
+  <form method="get" class="filters">
+    <label>Student
+      <select name="student" onchange="this.form.submit()">
+        <option value="">All students</option>
+        {% for s in students %}
+          <option value="{{ s.pk }}" {% if selected == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.first_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Window
+      <select name="days" onchange="this.form.submit()">
+        {% for d in "7,30,90"|slice:"::" %}{% endfor %}
+        <option value="7" {% if days == 7 %}selected{% endif %}>Last 7 days</option>
+        <option value="30" {% if days == 30 %}selected{% endif %}>Last 30 days</option>
+        <option value="90" {% if days == 90 %}selected{% endif %}>Last 90 days</option>
+      </select>
+    </label>
+    <a class="btn small ghost" href="{% url 'progress:api' %}?student={{ selected }}&days={{ days }}">View as JSON</a>
+  </form>
+
+  <div class="three">
+    <div class="panel big-number"><span class="label">Questions answered</span>
+      <strong>{{ total_attempts }}</strong></div>
+    <div class="panel big-number"><span class="label">Overall accuracy</span>
+      <strong>{% if overall_accuracy is not None %}{{ overall_accuracy|floatformat:0 }}%{% else %}—{% endif %}</strong></div>
+    <div class="panel big-number"><span class="label">Window</span>
+      <strong>{{ days }} days</strong></div>
+  </div>
+
+  {% if not enough_data %}
+    <p class="flash warning">
+      Fewer than 10 answers in this window. The charts below are shown, but treat them as a
+      first look rather than a trend.
+    </p>
+  {% endif %}
+
+  <div class="two">
+    <div class="panel">
+      <h3>Level over time</h3>
+      {% if level_points %}
+        <table class="table small">
+          <thead><tr><th>Date</th><th>Average level</th></tr></thead>
+          <tbody>{% for p in level_points %}
+            <tr><td>{{ p.date }}</td>
+                <td><span class="sparkbar" style="width:{{ p.level }}0%"></span> {{ p.level }}</td></tr>
+          {% endfor %}</tbody>
+        </table>
+      {% else %}<p class="muted">No attempts in this window.</p>{% endif %}
+    </div>
+
+    <div class="panel">
+      <h3>Accuracy by skill</h3>
+      {% if accuracy %}
+        <table class="table small">
+          <thead><tr><th>Skill</th><th>Attempts</th><th>Accuracy</th></tr></thead>
+          <tbody>{% for a in accuracy %}
+            <tr><td>{{ a.skill }}</td><td>{{ a.attempts }}</td>
+                <td>{{ a.accuracy|floatformat:2 }}</td></tr>
+          {% endfor %}</tbody>
+        </table>
+      {% else %}<p class="muted">No attempts in this window.</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Needs practice</h3>
+    {% if needs %}
+      <p class="muted small">Weakest skills with at least four attempts — fewer than that is a
+         sample, not a weakness.</p>
+      <ul>{% for n in needs %}
+        <li><strong>{{ n.skill }}</strong> — {{ n.accuracy|floatformat:2 }} accuracy over
+            {{ n.attempts }} attempts</li>
+      {% endfor %}</ul>
+    {% else %}
+      <p class="muted">Not enough attempts yet to say what needs practice.</p>
+    {% endif %}
+  </div>
+{% endblock %}

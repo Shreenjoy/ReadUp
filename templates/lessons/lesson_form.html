@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}New lesson{% endblock %}
+{% block content %}
+  <h1>Write a lesson by hand</h1>
+  <form method="post" class="card narrow">{% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn">Create lesson</button>
+    <a class="btn ghost" href="{% url 'lessons:list' %}">Cancel</a>
+  </form>
+{% endblock %}

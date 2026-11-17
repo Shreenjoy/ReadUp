@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ mode }} student{% endblock %}
+{% block content %}
+  <h1>{{ mode }} student</h1>
+  <p class="muted">ReadUp stores a first name, grade and home language. Nothing else about a child.</p>
+  <form method="post" class="card narrow">{% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn">Save</button>
+    <a class="btn ghost" href="{% url 'students:list' %}">Cancel</a>
+  </form>
+{% endblock %}

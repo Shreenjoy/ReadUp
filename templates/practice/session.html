@@ -1,0 +1,47 @@
+{% load static %}{% comment %}
+  Screen 5: the only screen a child ever sees.
+
+  Deliberately NOT extending base.html. No navigation, no other student's name, no score and
+  no timer -- just one question and four large answers, per the Hick's Law and Cognitive Load
+  reasoning in the wireframes. "End session" is small, cornered and confirms, so a child
+  cannot leave by accident.
+{% endcomment %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ session.student.first_name }} · practice</title>
+  <link rel="stylesheet" href="{% static 'css/readup.css' %}">
+</head>
+<body class="kid">
+<header class="kidbar">
+  <strong>{{ session.student.first_name }}</strong>
+  <span>{{ session.get_skill_display }} · Level {{ level }}</span>
+  <form method="post" action="{% url 'practice:end' session.pk %}"
+        onsubmit="return confirm('End this session?');">{% csrf_token %}
+    <button class="link small">End session</button>
+  </form>
+</header>
+
+<main class="kidmain">
+  <div class="dots" role="img"
+       aria-label="Question {{ answered|add:1 }} of {{ session.planned_questions }}">
+    {% for i in progress %}<span class="dot {% if forloop.counter0 < answered %}on{% endif %}"></span>{% endfor %}
+  </div>
+  <p class="muted center">Question {{ answered|add:1 }} of {{ session.planned_questions }}</p>
+
+  <section class="prompt">
+    <h1>{{ question.prompt }}</h1>
+    {% if instruction %}<p class="home-language" lang="{{ session.student.home_language }}">{{ instruction }}</p>{% endif %}
+    {% if question.lesson.passage %}<p class="passage">{{ question.lesson.passage }}</p>{% endif %}
+  </section>
+
+  <form method="post" action="{% url 'practice:answer' session.pk %}" class="answers">
+    {% csrf_token %}
+    {% for choice in question.choices.all %}
+      <button class="answer" name="choice" value="{{ choice.pk }}">{{ choice.text }}</button>
+    {% endfor %}
+  </form>
+</main>
+</body>
+</html>

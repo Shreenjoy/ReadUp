@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}No questions yet{% endblock %}
+{% block content %}
+  <h1>No {{ session.get_skill_display|lower }} questions in the bank yet</h1>
+  <p>The quiz engine had nothing to ask {{ session.student.first_name }}. Add a lesson first
+     and the session will work.</p>
+  <p>
+    <a class="btn" href="{% url 'lessons:draft' %}">Draft a lesson with the assistant</a>
+    <a class="btn ghost" href="{% url 'students:list' %}">Back to my students</a>
+  </p>
+{% endblock %}

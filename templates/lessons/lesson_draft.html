@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Draft a lesson{% endblock %}
+{% block content %}
+  <h1>Draft a lesson with the assistant</h1>
+  <p class="muted">
+    Paste a passage or describe a topic. The assistant drafts questions, estimates a level and
+    writes the instruction line in each home language. <strong>Nothing is saved until you
+    review it below</strong> — no question reaches a child without a tutor reading it first.
+  </p>
+
+  {% if not ai_configured %}
+    <p class="flash warning">
+      No AI key is configured, so drafting uses the built-in rule-based generator. The flow is
+      the same and the lesson still saves; the questions are plainer.
+    </p>
+  {% endif %}
+
+  <form method="post" class="card">{% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn">Draft questions</button>
+  </form>
+
+  {% if draft %}
+    <h2>Review the draft</h2>
+    <p class="muted">
+      {% if draft.source == "ai" %}
+        Drafted by the assistant. Edit anything that is wrong, then save.
+      {% else %}
+        <strong>Rule-based draft.</strong> {{ draft.note }} Edit and save as normal.
+      {% endif %}
+    </p>
+
+    <form method="post" action="{% url 'lessons:save-draft' %}" class="card">{% csrf_token %}
+      <input type="hidden" name="source" value="{{ draft.source }}">
+      <input type="hidden" name="passage" value="{{ passage }}">
+      <input type="hidden" name="question_count" value="{{ draft.questions|length }}">
+      <p>
+        <label>Title <input name="title" value="{{ draft.title }}" required></label>
+        <label>Skill
+          <select name="skill">
+            <option value="reading" {% if skill == "reading" %}selected{% endif %}>Reading</option>
+            <option value="math" {% if skill == "math" %}selected{% endif %}>Math</option>
+          </select>
+        </label>
+        <label>Level
+          <select name="level">
+            {% for l in "123456" %}
+              <option value="{{ forloop.counter }}" {% if draft.level == forloop.counter %}selected{% endif %}>Level {{ forloop.counter }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </p>
+
+      {% for q in draft.questions %}
+        <fieldset class="panel">
+          <legend>Question {{ forloop.counter }}</legend>
+          {% with i=forloop.counter0 %}
+            <p><label>Prompt
+              <input name="q{{ i }}_prompt" value="{{ q.prompt }}" required></label></p>
+            <p class="muted small">Pick the correct answer. Every question needs four answers
+               and exactly one correct.</p>
+            {% for c in q.choices %}
+              <p class="choice-row">
+                <input type="radio" name="q{{ i }}_correct" value="{{ forloop.counter0 }}"
+                       {% if c.is_correct %}checked{% endif %}
+                       aria-label="Mark answer {{ forloop.counter }} correct">
+                <input name="q{{ i }}_c{{ forloop.counter0 }}" value="{{ c.text }}" required>
+              </p>
+            {% endfor %}
+            <details>
+              <summary>Instruction lines</summary>
+              {% for code, text in q.instructions.items %}
+                <p><label>{{ code }}
+                  <input name="q{{ i }}_i_{{ code }}" value="{{ text }}"></label></p>
+              {% endfor %}
+            </details>
+          {% endwith %}
+        </fieldset>
+      {% endfor %}
+
+      <button class="btn">Save lesson</button>
+    </form>
+  {% endif %}
+{% endblock %}

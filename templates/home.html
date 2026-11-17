@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Practice that meets every kid where they are{% endblock %}
+{% block content %}
+  <section class="hero">
+    <h1>Practice that meets every kid where they are.</h1>
+    <p class="lead">
+      ReadUp gives volunteer tutors short reading and math sessions that adjust to each
+      child, and keeps the progress so nothing is lost when a student changes tutor.
+    </p>
+    <p>
+      <a class="btn big" href="{% url 'signup' %}">I'm a tutor: sign up</a>
+      <a class="btn big ghost" href="{% url 'login' %}">Log in</a>
+    </p>
+  </section>
+  <section class="three">
+    <div class="panel"><h3>Adapts to each student</h3>
+      <p>Three right in a row moves a child up a level. Two misses moves them down, so a
+         session is never a wall or a waste of time.</p></div>
+    <div class="panel"><h3>Instructions in 5 languages</h3>
+      <p>Every question can show its instruction line in Bengali, Hindi, Urdu or Gujarati, so
+         a child spends their effort on the reading, not the directions.</p></div>
+    <div class="panel"><h3>No child accounts</h3>
+      <p>Tutors hold the accounts. Children never sign up, never type personal information
+         and only ever see the practice screen.</p></div>
+  </section>
+{% endblock %}

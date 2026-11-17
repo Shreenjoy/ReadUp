@@ -1,0 +1,46 @@
+{% comment %}
+  Base layout for every tutor-facing page.
+
+  The practice session (screen 5) deliberately does NOT extend this template. A child should
+  see one question and four answers, with no navigation to wander into and no other student's
+  name on screen, so that page carries its own minimal shell.
+{% endcomment %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ReadUp{% endblock %} · ReadUp</title>
+  <link rel="stylesheet" href="{% load static %}{% static 'css/readup.css' %}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{% url 'home' %}">READUP</a>
+  {% if user.is_authenticated %}
+    <nav>
+      <a href="{% url 'students:list' %}" class="{% if nav == 'students' %}on{% endif %}">Students</a>
+      <a href="{% url 'lessons:list' %}" class="{% if nav == 'lessons' %}on{% endif %}">Lessons</a>
+      <a href="{% url 'progress:dashboard' %}" class="{% if nav == 'progress' %}on{% endif %}">Progress</a>
+    </nav>
+    <span class="who">
+      {{ user.first_name|default:user.username }}
+      {% if user.tutor_profile.is_lead %}<span class="pill">Program lead</span>{% endif %}
+    </span>
+    <form method="post" action="{% url 'logout' %}" class="inline">{% csrf_token %}
+      <button class="link">Log out</button>
+    </form>
+  {% else %}
+    <nav><a href="{% url 'login' %}">Log in</a> <a class="btn small" href="{% url 'signup' %}">Sign up</a></nav>
+  {% endif %}
+</header>
+
+<main class="wrap">
+  {% if messages %}{% for m in messages %}
+    <p class="flash {{ m.tags }}">{{ m }}</p>
+  {% endfor %}{% endif %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="foot">ReadUp · Team 5 · INFO 490 · built for Informed Empowerment</footer>
+</body>
+</html>

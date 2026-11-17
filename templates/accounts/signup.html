@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Sign up{% endblock %}
+{% block content %}
+  <h1>Create a tutor account</h1>
+  <p class="muted">Only adults make accounts. You will add your students after this.</p>
+  <form method="post" class="card narrow">{% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn">Create account</button>
+  </form>
+  <p class="muted">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+{% endblock %}

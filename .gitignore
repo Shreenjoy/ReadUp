@@ -1,0 +1,17 @@
+staticfiles/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+db.sqlite3
+.DS_Store
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+*.onnx
+.pytest_cache/
+node_modules/

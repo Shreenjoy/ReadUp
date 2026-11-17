@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Session summary{% endblock %}
+{% block content %}
+  <h1>Session complete: {{ session.student.first_name }}</h1>
+  <p class="muted">{{ session.get_skill_display }} · {{ session.answered }} questions ·
+     {{ minutes }} minute{{ minutes|pluralize }}</p>
+
+  <div class="three">
+    <div class="panel big-number">
+      <span class="label">Accuracy</span>
+      <strong>{% if session.accuracy is not None %}{{ session.accuracy|floatformat:0 }}{% else %}—{% endif %}%</strong>
+    </div>
+    <div class="panel big-number">
+      <span class="label">Level</span>
+      <strong>{{ session.started_level }} → {{ session.ended_level }}</strong>
+    </div>
+    <div class="panel big-number">
+      <span class="label">Best streak</span><strong>{{ best_streak }}</strong>
+    </div>
+  </div>
+
+  <h3>Questions</h3>
+  <table class="table">
+    <thead><tr><th>Question</th><th>Answered</th><th>Result</th><th>Level</th></tr></thead>
+    <tbody>
+      {% for a in attempts %}
+        <tr>
+          <td>{{ a.question.prompt }}</td>
+          <td>{{ a.chosen_text }}</td>
+          <td>{% if a.is_correct %}<span class="ok">✓ right</span>{% else %}<span class="no">✗ missed</span>{% endif %}</td>
+          <td>{% if a.level_changed %}{{ a.level_before }} → {{ a.level_after }}{% else %}L{{ a.level_after }}{% endif %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">No questions were answered.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form method="post" class="card">{% csrf_token %}
+    <label for="notes"><strong>Notes for the next tutor</strong></label>
+    <textarea id="notes" name="notes" rows="3">{{ session.notes }}</textarea>
+    <button class="btn">Save and exit</button>
+    <a class="btn ghost" href="{% url 'practice:start' session.student.pk %}">Another session</a>
+  </form>
+{% endblock %}

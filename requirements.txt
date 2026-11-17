@@ -1,0 +1,8 @@
+# ReadUp dependencies. Install with:  pip install -r requirements.txt
+#
+# Deliberately small. The AI feature calls a hosted API over plain HTTPS, so there is no
+# torch, no transformers and no model weights to download -- see README_AI.md for why.
+
+Django>=5.2,<6
+django-environ>=0.11        # reads .env so secrets never live in settings.py
+requests>=2.31              # the lesson authoring assistant's HTTP calls

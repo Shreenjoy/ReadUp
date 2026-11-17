@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Lesson bank{% endblock %}
+{% block content %}
+  <div class="rowhead">
+    <div><h1>Lesson bank</h1><p class="muted">Everything here feeds the quiz engine.</p></div>
+    <div>
+      <a class="btn small" href="{% url 'lessons:draft' %}">+ Draft with assistant</a>
+      <a class="btn small ghost" href="{% url 'lessons:create' %}">Write by hand</a>
+    </div>
+  </div>
+
+  <form method="get" class="filters">
+    <label>Skill
+      <select name="skill" onchange="this.form.submit()">
+        <option value="">All</option>
+        {% for value, label in skills %}
+          <option value="{{ value }}" {% if skill == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Level
+      <select name="level" onchange="this.form.submit()">
+        <option value="">All</option>
+        {% for l in levels %}
+          <option value="{{ l }}" {% if level == l|stringformat:"s" %}selected{% endif %}>Level {{ l }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <noscript><button class="btn small ghost">Filter</button></noscript>
+  </form>
+
+  <table class="table">
+    <thead><tr><th>Title</th><th>Skill</th><th>Level</th><th>Questions</th><th>Added by</th></tr></thead>
+    <tbody>
+      {% for lesson in lessons %}
+        <tr>
+          <td><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a>
+              {% if lesson.ai_generated %}<span class="pill">AI draft</span>{% endif %}</td>
+          <td>{{ lesson.get_skill_display }}</td>
+          <td>L{{ lesson.level }}</td>
+          <td>{{ lesson.questions.count }}</td>
+          <td>{{ lesson.created_by.first_name|default:lesson.created_by.username }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="muted">The bank is empty. Draft a lesson to get started.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

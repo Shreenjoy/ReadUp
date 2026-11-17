@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ student.first_name }}{% endblock %}
+{% block content %}
+  <p><a class="back" href="{% url 'students:list' %}">&lsaquo; My students</a></p>
+  <div class="rowhead">
+    <div>
+      <h1>{{ student.first_name }}</h1>
+      <p class="muted">Grade {{ student.grade }} · Home language:
+        {{ student.get_home_language_display }}</p>
+    </div>
+    <div>
+      <a class="btn small ghost" href="{% url 'students:edit' student.pk %}">Edit profile</a>
+      <a class="btn small" href="{% url 'practice:start' student.pk %}">Start session</a>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <h3>Current levels</h3>
+      <p>Reading{% for i in "123456" %}<span class="bar {% if forloop.counter <= reading_level %}on{% endif %}"></span>{% endfor %} L{{ reading_level }}</p>
+      <p>Math{% for i in "123456" %}<span class="bar {% if forloop.counter <= math_level %}on{% endif %}"></span>{% endfor %} L{{ math_level }}</p>
+      <p class="muted small">Levels come from this student's own attempt history, not a
+         stored number, so they always match the sessions below.</p>
+    </div>
+    <div class="panel">
+      <h3>Tutor notes</h3>
+      <p>{{ student.notes|default:"No notes yet. Add them at the end of a session." }}</p>
+    </div>
+  </div>
+
+  <h3>Recent sessions</h3>
+  <table class="table">
+    <thead><tr><th>Date</th><th>Skill</th><th>Questions</th><th>Accuracy</th><th>Level</th></tr></thead>
+    <tbody>
+    {% for s in sessions %}
+      <tr>
+        <td><a href="{% url 'practice:summary' s.pk %}">{{ s.started_at|date:"M j, Y" }}</a></td>
+        <td>{{ s.get_skill_display }}</td>
+        <td>{{ s.answered }}</td>
+        <td>{% if s.accuracy is not None %}{{ s.accuracy|floatformat:2 }}{% else %}—{% endif %}</td>
+        <td>{{ s.started_level }} → {{ s.ended_level }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5" class="muted">No sessions yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

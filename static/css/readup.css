@@ -1,0 +1,99 @@
+/* ReadUp styles.
+   Two visual modes: the dense tutor interface, and the stripped-down child session (.kid),
+   where buttons are deliberately enormous per the Fitts's Law note in the wireframes. */
+:root{--ink:#17202a;--muted:#5d6b78;--line:#d8e0e6;--bg:#f7f9fa;--card:#fff;
+      --brand:#1f6f54;--brand-ink:#fff;--ok:#1a7f45;--no:#a3321f;--warn:#fff4d6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+     font:16px/1.55 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--brand)}
+.wrap{max-width:1060px;margin:0 auto;padding:24px 18px 60px}
+.topbar{display:flex;align-items:center;gap:18px;padding:12px 18px;background:var(--card);
+        border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:1px;text-decoration:none;color:var(--ink)}
+.topbar nav{display:flex;gap:14px;margin-right:auto}
+.topbar nav a{text-decoration:none;padding:6px 10px;border-radius:7px;color:var(--ink)}
+.topbar nav a.on{background:var(--ink);color:#fff}
+.who{color:var(--muted);font-size:14px}
+h1{font-size:28px;margin:0 0 4px}h2{font-size:21px}h3{font-size:17px;margin:0 0 8px}
+.muted{color:var(--muted)}.small{font-size:13px}.center{text-align:center}
+.lead{font-size:18px;max-width:60ch}
+.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;
+             padding:16px;margin-bottom:16px}
+.narrow{max-width:460px}
+.rowhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+         flex-wrap:wrap;margin-bottom:16px}
+.btn{display:inline-block;background:var(--brand);color:var(--brand-ink);border:0;
+     border-radius:9px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;
+     text-decoration:none}
+.btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.small{padding:6px 12px;font-size:14px}
+.btn.big{padding:14px 22px;font-size:18px}
+.btn.wide{display:block;text-align:center;margin-top:8px}
+.link{background:0;border:0;color:var(--brand);cursor:pointer;font:inherit;padding:0}
+.inline{display:inline-flex;gap:8px;align-items:center}
+input,select,textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);
+                      border-radius:8px;background:#fff;max-width:100%}
+.filters{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px}
+.card.student h3{margin:6px 0 2px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--brand);color:#fff;
+        display:grid;place-items:center;font-weight:700}
+.pill{display:inline-block;background:#eef3f1;border-radius:999px;padding:2px 10px;
+      font-size:12px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:760px){.two,.three{grid-template-columns:1fr}}
+.table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+       border-radius:10px;overflow:hidden;margin-bottom:18px}
+.table th,.table td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);
+                    font-size:14px}
+.table th{background:#eef3f1}
+.big-number{text-align:center}.big-number .label{color:var(--muted);font-size:13px;display:block}
+.big-number strong{font-size:30px;display:block;margin-top:4px}
+.bar{display:inline-block;width:20px;height:12px;border:1px solid var(--line);margin-left:3px;
+     border-radius:3px}
+.bar.on{background:var(--brand);border-color:var(--brand)}
+.sparkbar{display:inline-block;height:9px;background:var(--brand);border-radius:4px;
+          vertical-align:middle;max-width:60%}
+.ok{color:var(--ok);font-weight:600}.no{color:var(--no);font-weight:600}
+.flash{padding:10px 14px;border-radius:9px;background:#e8f3ec;border:1px solid #bcdcca}
+.flash.warning,.flash.error{background:var(--warn);border-color:#e8d08a}
+.foot{text-align:center;color:var(--muted);font-size:13px;padding:22px}
+.back{text-decoration:none;color:var(--muted)}
+.choices{margin:0;padding-left:20px}
+.choice-row{display:flex;gap:10px;align-items:center}
+.choice-row input[type=text],.choice-row input:not([type]){flex:1}
+.hero{padding:26px 0}
+
+/* ---- child session: one question, four huge answers, nothing else ---- */
+body.kid{background:#fff}
+.kidbar{display:flex;gap:16px;align-items:center;justify-content:space-between;
+        padding:10px 18px;border-bottom:2px solid var(--line);font-size:15px}
+.kidmain{max-width:860px;margin:0 auto;padding:18px}
+.dots{display:flex;gap:7px;justify-content:center;margin:8px 0}
+.dot{width:38px;height:13px;border:2px solid var(--line);border-radius:4px}
+.dot.on{background:var(--brand);border-color:var(--brand)}
+.prompt{background:#f2f6f4;border-radius:14px;padding:20px;margin:16px 0}
+.prompt h1{font-size:28px;line-height:1.35}
+.home-language{font-size:20px;color:#2c4a3e;margin:8px 0 0}
+.passage{font-size:19px;margin-top:12px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+@media(max-width:640px){.answers{grid-template-columns:1fr}}
+.answer{font:inherit;font-size:26px;font-weight:700;padding:30px 18px;border-radius:16px;
+        border:3px solid var(--ink);background:#fff;cursor:pointer;min-height:104px}
+.answer:hover,.answer:focus{background:#eef3f1;outline:3px solid var(--brand)}
+
+/* Draft review screen: the tutor is proofreading generated text, so the fields have to be
+   wide enough to actually read. Narrow inputs made this screen unusable in review. */
+fieldset.panel{border:1px solid var(--line)}
+fieldset.panel legend{font-weight:700;padding:0 6px}
+fieldset.panel label{display:block;margin-bottom:4px}
+fieldset.panel input[name$="_prompt"]{width:100%;font-size:15px}
+.card label{display:inline-block;margin-right:14px}
+.card textarea{width:100%}
+form p label{display:block;margin-bottom:4px;font-weight:600}
+form p label input,form p label select{font-weight:400}
+details summary{cursor:pointer;color:var(--muted);font-size:14px}
+details p label{display:flex;gap:8px;align-items:center;font-weight:400}
+details p label input{flex:1}
