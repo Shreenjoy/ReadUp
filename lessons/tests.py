@@ -196,9 +196,15 @@ class LessonBankTests(TestCase):
     def setUp(self):
         self.tutor = User.objects.create_user("asha", password=PASSWORD)
         TutorProfile.objects.create(user=self.tutor)
+        self.lessons = {}
         for level in (1, 3):
-            lesson = Lesson.objects.create(title=f"L{level}", skill=Skill.READING,
-                                           level=level, created_by=self.tutor)
+            # Distinctive titles: an earlier version named these "L1"/"L3", which collided
+            # with the "L1" column headers in the coverage table and made the filter test
+            # pass or fail for the wrong reason.
+            lesson = Lesson.objects.create(title=f"Lesson about level {level}",
+                                           skill=Skill.READING, level=level,
+                                           created_by=self.tutor)
+            self.lessons[level] = lesson
             q = Question.objects.create(lesson=lesson, prompt="p")
             Choice.objects.create(question=q, text="a", is_correct=True)
         self.client.login(username="asha", password=PASSWORD)
@@ -208,6 +214,14 @@ class LessonBankTests(TestCase):
         self.assertEqual(self.client.get(reverse("lessons:list")).status_code, 302)
 
     def test_filtering_by_level_narrows_the_list(self):
+        """Asserts on the lesson's own link, not on a substring that the coverage table
+        also contains."""
         response = self.client.get(reverse("lessons:list"), {"level": "3"})
-        self.assertContains(response, "L3")
-        self.assertNotContains(response, ">L1<")
+        self.assertContains(response, self.lessons[3].get_absolute_url())
+        self.assertNotContains(response, self.lessons[1].get_absolute_url())
+
+    def test_the_bank_page_reports_coverage_gaps(self):
+        """Levels with no questions are the cause of the engine's silent level fallback."""
+        response = self.client.get(reverse("lessons:list"))
+        self.assertContains(response, "Coverage")
+        self.assertTrue(response.context["has_gaps"])

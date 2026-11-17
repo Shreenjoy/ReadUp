@@ -58,6 +58,19 @@ class Session(models.Model):
         return (self.correct_count / total) if total else None
 
     @property
+    def coverage_gaps(self):
+        """Levels this session asked for and the bank could not supply.
+
+        Surfaced on the summary so a tutor learns the bank has a hole, instead of quietly
+        watching a child practise below their level for weeks.
+        """
+        gaps = {}
+        for attempt in self.attempts.select_related("question__lesson"):
+            if attempt.level_mismatch:
+                gaps.setdefault(attempt.level_before, set()).add(attempt.served_level)
+        return [{"asked": asked, "served": sorted(served)} for asked, served in sorted(gaps.items())]
+
+    @property
     def ended_level(self):
         last = self.attempts.order_by("-created_at").first()
         return last.level_after if last else self.started_level
@@ -90,3 +103,19 @@ class Attempt(models.Model):
     @property
     def level_changed(self):
         return self.level_after != self.level_before
+
+    @property
+    def served_level(self):
+        """The level of the question the child was ACTUALLY given.
+
+        Not always the level the engine asked for: when the bank has no question at the
+        requested level, `pick_question` falls outward to the nearest level that does. That
+        is the right behaviour -- a gap in the bank should not end a child's session -- but
+        it has to be visible, which is what `level_mismatch` is for.
+        """
+        return self.question.lesson.level
+
+    @property
+    def level_mismatch(self):
+        """True when the bank could not serve the level the engine asked for."""
+        return self.served_level != self.level_before

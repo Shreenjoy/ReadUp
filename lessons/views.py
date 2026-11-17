@@ -26,9 +26,23 @@ def lesson_list(request):
         lessons = lessons.filter(skill=skill)
     if level.isdigit():
         lessons = lessons.filter(level=int(level))
+    # Coverage matrix. A gap here is the cause of the "asked L5, served L4" warning tutors
+    # see on the session summary, so the bank page is where it belongs.
+    from .models import Question
+    coverage = []
+    for value, label in Skill.choices:
+        row = {"skill": label, "levels": []}
+        for lvl in range(1, 7):
+            row["levels"].append({
+                "level": lvl,
+                "count": Question.objects.filter(lesson__skill=value, lesson__level=lvl).count(),
+            })
+        coverage.append(row)
     return render(request, "lessons/lesson_list.html", {
         "lessons": lessons, "skill": skill, "level": level,
         "skills": Skill.choices, "levels": range(1, 7),
+        "coverage": coverage,
+        "has_gaps": any(c["count"] == 0 for row in coverage for c in row["levels"]),
         "ai_configured": ai.is_configured(),
     })
 

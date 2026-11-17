@@ -29,6 +29,30 @@
     <noscript><button class="btn small ghost">Filter</button></noscript>
   </form>
 
+  <div class="panel">
+    <h3>Coverage</h3>
+    <p class="muted small">
+      How many questions exist at each level. A zero is a hole the quiz engine has to work
+      around: a child who earns that level is served the nearest one instead, and the session
+      summary tells the tutor it happened.
+    </p>
+    <table class="table small">
+      <thead><tr><th>Skill</th>{% for l in levels %}<th>L{{ l }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        {% for row in coverage %}
+          <tr><td>{{ row.skill }}</td>
+            {% for cell in row.levels %}
+              <td{% if cell.count == 0 %} class="no"{% endif %}>{{ cell.count }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if has_gaps %}
+      <p class="muted small">Levels showing 0 need a lesson before a child can reach them.</p>
+    {% endif %}
+  </div>
+
   <table class="table">
     <thead><tr><th>Title</th><th>Skill</th><th>Level</th><th>Questions</th><th>Added by</th></tr></thead>
     <tbody>

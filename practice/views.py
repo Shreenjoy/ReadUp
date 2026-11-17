@@ -55,10 +55,15 @@ def session_view(request, pk):
         return render(request, "practice/no_questions.html", {"session": session})
 
     request.session[f"q_start_{session.pk}"] = time.time()
+    # Display the level of the question actually being asked, not the one the engine wanted.
+    # These differ when the bank has a gap, and showing the requested level made the header
+    # state something untrue -- "Level 5" above a level 4 question.
     return render(request, "practice/session.html", {
         "session": session,
         "question": question,
-        "level": level,
+        "level": question.lesson.level,
+        "requested_level": level,
+        "level_mismatch": question.lesson.level != level,
         "instruction": question.instruction_for(session.student.home_language),
         "answered": session.answered,
         "progress": range(session.planned_questions),

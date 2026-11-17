@@ -5,6 +5,20 @@
   <p class="muted">{{ session.get_skill_display }} · {{ session.answered }} questions ·
      {{ minutes }} minute{{ minutes|pluralize }}</p>
 
+  {% if session.coverage_gaps %}
+    <div class="flash warning">
+      <strong>The lesson bank has a gap.</strong>
+      {% for gap in session.coverage_gaps %}
+        {{ session.student.first_name }} earned level {{ gap.asked }} but there are no
+        level {{ gap.asked }} {{ session.get_skill_display|lower }} questions, so
+        level {% for s in gap.served %}{{ s }}{% if not forloop.last %}/{% endif %}{% endfor %}
+        was asked instead.
+      {% endfor %}
+      <a href="{% url 'lessons:draft' %}">Add a lesson at that level</a> so the next session
+      fits properly.
+    </div>
+  {% endif %}
+
   <div class="three">
     <div class="panel big-number">
       <span class="label">Accuracy</span>
@@ -28,7 +42,10 @@
           <td>{{ a.question.prompt }}</td>
           <td>{{ a.chosen_text }}</td>
           <td>{% if a.is_correct %}<span class="ok">✓ right</span>{% else %}<span class="no">✗ missed</span>{% endif %}</td>
-          <td>{% if a.level_changed %}{{ a.level_before }} → {{ a.level_after }}{% else %}L{{ a.level_after }}{% endif %}</td>
+          <td>
+            {% if a.level_changed %}{{ a.level_before }} → {{ a.level_after }}{% else %}L{{ a.level_after }}{% endif %}
+            {% if a.level_mismatch %}<span class="pill">asked L{{ a.level_before }}, served L{{ a.served_level }}</span>{% endif %}
+          </td>
         </tr>
       {% empty %}
         <tr><td colspan="4" class="muted">No questions were answered.</td></tr>

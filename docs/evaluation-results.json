@@ -1,0 +1,89 @@
+{
+  "generated": "2026-11-17 06:06",
+  "tests": [
+    {
+      "test": 1,
+      "name": "Adaptive promotion",
+      "input": "A student at level 1 answers three questions correctly in a row.",
+      "expected": "Level rises to 2 after the third correct answer, not before.",
+      "actual": "level_after per answer: [1, 1, 2]",
+      "passed": true,
+      "quality": 10,
+      "latency_ms": 2.2
+    },
+    {
+      "test": 2,
+      "name": "Adaptive demotion",
+      "input": "A student at level 4 misses two questions in a row.",
+      "expected": "Level drops to 3 after the second miss (faster than promotion).",
+      "actual": "level_after per answer: [4, 3]",
+      "passed": true,
+      "quality": 10,
+      "latency_ms": null
+    },
+    {
+      "test": 3,
+      "name": "AI lesson drafting",
+      "input": "A 146-character passage, 4 questions requested.",
+      "expected": "A draft with 4 structurally valid questions and translated instruction lines.",
+      "actual": "source=offline, 4 questions, all well-formed=True, level=4, 0/4 carry a translation",
+      "passed": true,
+      "quality": 4,
+      "latency_ms": 0.0,
+      "source": "offline"
+    },
+    {
+      "test": 4,
+      "name": "Practice page load (the child's wait)",
+      "input": "GET the practice screen; the engine decides a level and picks a question.",
+      "expected": "Under 200 ms, because a seven-year-old is watching the screen.",
+      "actual": "HTTP 200, median 2.4 ms over 5 loads [6.3, 2.4, 2.4, 2.3, 2.1]",
+      "passed": true,
+      "quality": 10,
+      "latency_ms": 2.4
+    },
+    {
+      "test": 5,
+      "name": "Cross-tutor authorisation",
+      "input": "A second tutor requests another tutor's student by primary key.",
+      "expected": "404 on the profile and the session, and zero attempts in the API.",
+      "actual": "profile=404, start=404, api attempts visible=0",
+      "passed": true,
+      "quality": 10,
+      "latency_ms": null
+    },
+    {
+      "test": 6,
+      "name": "Dashboard and CSV report",
+      "input": "Load the progress dashboard, then download the CSV report.",
+      "expected": "Both return 200; the CSV has one row per recorded attempt.",
+      "actual": "dashboard HTTP 200 in 1.6 ms; CSV HTTP 200 in 1.1 ms with 18 data rows against 18 attempts in the database",
+      "passed": true,
+      "quality": 9,
+      "latency_ms": 1.6
+    }
+  ],
+  "passed": 6,
+  "total": 6,
+  "bank_coverage": {
+    "reading L1": 2,
+    "reading L2": 2,
+    "reading L3": 2,
+    "reading L4": 2,
+    "reading L5": 0,
+    "reading L6": 0,
+    "math L1": 2,
+    "math L2": 2,
+    "math L3": 2,
+    "math L4": 2,
+    "math L5": 0,
+    "math L6": 0
+  },
+  "bank_gaps": [
+    "reading L5",
+    "reading L6",
+    "math L5",
+    "math L6"
+  ],
+  "ai_configured": false
+}

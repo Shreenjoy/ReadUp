@@ -181,3 +181,61 @@ class AuthorisationTests(TestCase):
         TutorProfile.objects.create(user=lead, role=TutorProfile.Role.LEAD,
                                     program="A Different Program")
         self.assertNotIn(self.a_student, Student.visible_to(lead))
+
+
+class CoverageGapTests(TestCase):
+    """The improvement from the Part 4 evaluation.
+
+    Before: when the bank had no question at the engine's chosen level, `pick_question` fell
+    outward to the nearest level that did, the practice header still displayed the level the
+    engine WANTED, and nothing anywhere recorded that a substitution had happened. A child
+    could practise a level below their own for weeks without the tutor having any way to know.
+
+    After: the attempt reports the mismatch from data already stored, the header shows the
+    level actually asked, and the session summary tells the tutor which level is missing.
+    """
+
+    def setUp(self):
+        self.tutor = User.objects.create_user("asha", password=PASSWORD)
+        TutorProfile.objects.create(user=self.tutor)
+        self.student = Student.objects.create(first_name="Mitali", tutor=self.tutor)
+        make_lesson(4, user=self.tutor)          # a bank with ONLY level 4
+        self.client.login(username="asha", password=PASSWORD)
+
+    def test_a_substituted_question_is_recorded_as_a_mismatch(self):
+        session = Session.objects.create(student=self.student, tutor=self.tutor,
+                                         started_level=6)
+        question = engine.pick_question(session, 6)
+        self.assertEqual(question.lesson.level, 4)        # fell outward, as designed
+        attempt = Attempt.objects.create(
+            session=session, student=self.student, question=question,
+            level_before=6, level_after=6)
+        self.assertEqual(attempt.served_level, 4)
+        self.assertTrue(attempt.level_mismatch)
+
+    def test_the_session_reports_which_level_is_missing(self):
+        session = Session.objects.create(student=self.student, tutor=self.tutor,
+                                         started_level=6)
+        question = engine.pick_question(session, 6)
+        Attempt.objects.create(session=session, student=self.student, question=question,
+                               level_before=6, level_after=6)
+        self.assertEqual(session.coverage_gaps, [{"asked": 6, "served": [4]}])
+
+    def test_the_practice_header_shows_the_level_actually_asked(self):
+        """The header used to claim the requested level, which was simply untrue."""
+        session = Session.objects.create(student=self.student, tutor=self.tutor,
+                                         started_level=6)
+        response = self.client.get(reverse("practice:session", args=[session.pk]))
+        self.assertEqual(response.context["level"], 4)
+        self.assertEqual(response.context["requested_level"], 6)
+        self.assertTrue(response.context["level_mismatch"])
+
+    def test_no_mismatch_is_reported_when_the_bank_has_the_right_level(self):
+        make_lesson(2, user=self.tutor)
+        session = Session.objects.create(student=self.student, tutor=self.tutor,
+                                         started_level=2)
+        question = engine.pick_question(session, 2)
+        attempt = Attempt.objects.create(session=session, student=self.student,
+                                         question=question, level_before=2, level_after=2)
+        self.assertFalse(attempt.level_mismatch)
+        self.assertEqual(session.coverage_gaps, [])
